@@ -1,0 +1,41 @@
+{
+  "name": "code-club",
+  "version": "1.0.0",
+  "description": "Discord bot for Code Club Server",
+  "main": "index.js",
+  "dependencies": {
+    "@types/reflect-metadata": "^0.1.0",
+    "@types/request-promise-native": "^1.0.15",
+    "discord.js": "^11.4.2",
+    "moment": "^2.24.0",
+    "mongodb": "^3.1.10",
+    "mongoose": "^5.4.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "roll": "^1.2.0"
+  },
+  "devDependencies": {
+    "@types/mongoose": "^5.3.5",
+    "@types/request": "^2.48.1",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-cli": "^2.0.1",
+    "gulp-typescript": "^5.0.0",
+    "gulp-watch": "^5.0.1",
+    "run-sequence": "^2.2.1",
+    "typescript": "^3.2.2"
+  },
+  "scripts": {
+    "start": "gulp && node dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slippard/Code-Club.git"
+  },
+  "author": "Shane Lippard <s.lippard@protonmail.com> (https://twitter.com/s_lippard)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/slippard/Code-Club/issues"
+  },
+  "homepage": "https://github.com/slippard/Code-Club#readme"
+}

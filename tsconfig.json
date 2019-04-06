@@ -1,0 +1,25 @@
+{
+    "include": [
+        "src/**/*"
+    ],
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "lib": [
+            "es2017",
+            "dom"
+        ],
+        "experimentalDecorators": true,
+        "noImplicitAny": false,
+        "moduleResolution": "node",
+        "allowJs": false,
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "node_modules/*"
+            ]
+        }
+    }
+}
