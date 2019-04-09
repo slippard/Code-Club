@@ -8,9 +8,9 @@ This is a bot for the Code Club discord server.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
-```
-[Nodejs](https://nodejs.org/en/)
-```
+
+[Nodejs v10+](https://nodejs.org/en/)
+
 ### Running 
 
 1. Clone the repo to your computer
@@ -52,9 +52,9 @@ npm start
 
 ## Built With
 
-* [Mongo DB](http://www.dropwizard.io/1.0.2/docs/)
-* [Discord.js]([https://discord.js.org/#/](https://discord.js.org/#/))
-* [Mongoose](https://github.com/Automattic/mongoose)
+* [Mongo DB](https://www.npmjs.com/package/mongodb)
+* [Discord.js](https://www.npmjs.com/package/discord.js)
+* [Mongoose](https://www.npmjs.com/package/mongoose)
 
 ## License
 
