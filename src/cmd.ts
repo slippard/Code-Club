@@ -1,7 +1,8 @@
 import { Message, TextChannel, Client } from 'discord.js';
-import { Meme } from './commands/meme';
 import { ProfileInfo } from './commands/members/profile';
 import { GuildInfo } from './commands/guild/guildInfo';
+import { Purge } from './commands/admin/purge';
+import { Spam } from './commands/spam';
 import { data } from './config';
 import DMember, { IMember } from './schemas/user';
 
@@ -13,9 +14,10 @@ export class Cmd {
         this.cmd = context.content.split(data.prefix)[1].split(' ')[0];
         switch (this.cmd) {
             case 'ping': this.context.channel.send('pong!'); break
-            case 'meme': new Meme(context); break
             case 'profile': new ProfileInfo(context); break
             case 'guild': new GuildInfo(context); break
+            case 'purge': new Purge(context); break
+            case 'spam': new Spam(context); break
             default: break
         }
     }

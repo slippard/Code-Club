@@ -10,7 +10,7 @@ db.once('open', () => console.log('Connected to mongo database.'));
 db.on('error', (err: any) => console.log('Error connecting to mongo db: ' + err));
 
 /* Attempt to launch Client */
-try { 
+try {
   new Bot(data.token).login()
 } catch (error) {
   console.log('Login failed: ' + error);
