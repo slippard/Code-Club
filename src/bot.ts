@@ -3,12 +3,14 @@ import * as moment from 'moment';
 import { data } from './config';
 import { Cmd } from "./cmd";
 
-enum Color {
+export enum Color {
     red = '0xFB2828',
     yellow = '0xFFFF00',
     green = '0x93C54B',
     blue = '0x7272FB'
 }
+
+export var client: Client;
 
 export class Bot {
     public client: Client;
@@ -16,7 +18,7 @@ export class Bot {
     constructor(token: string) {
         this.client = new Client();
         this.token = token;
-        this.client.on('ready', () => this.client.user.setPresence({ status: "dnd" }));
+        this.client.on('ready', () => client = this.client);
 
         /* Errors */
         this.client.on('error', this.error.bind(this));
@@ -37,15 +39,8 @@ export class Bot {
         this.client.on('messageReactionRemove', this.reactionRemove.bind(this));
 
         /* Guild */
-        this.client.on('guildCreate', this.createGuild.bind(this));
-        this.client.on('guildDelete', this.deleteGuild.bind(this));
         this.client.on('guildBanAdd', this.addBan.bind(this));
         this.client.on('guildBanRemove', this.removeBan.bind(this));
-
-        /* Channels */
-        this.client.on('channelCreate', this.createChannel.bind(this));
-        this.client.on('channelDelete', this.removeChannel.bind(this));
-        this.client.on('channelUpdate', this.updateChannel.bind(this));
 
         /* Emojis */
         this.client.on('emojiCreate', this.emojiCreate.bind(this));
@@ -59,25 +54,25 @@ export class Bot {
     }
 
     private async error(e: Error) {
-        return this.log(`Discord Networking error: ${e.message}\n\n${e.stack}`, Color.red)
+        return this.log('Discord Error', `Discord Networking error: ${e.message}\n\n${e.stack}`, Color.red)
             .then(() => this.client.destroy())
             .then(() => this.client.login());
     }
 
     private async disconnect(e: CloseEvent): Promise<void> {
-        return this.log(`Connection lost. Reason: ${e.reason}`, Color.red);
+        return this.log('Client Disconnected', `Connection lost. Reason: ${e.reason}`, Color.red);
     }
 
     private async rateLimit(rateLimitInfo: Object): Promise<void> {
-        return this.log(`Client has reached rate limit:\n ${JSON.stringify(rateLimitInfo)}`, Color.red);
+        return this.log('Rate Limit Info', `${JSON.stringify(rateLimitInfo)}`, Color.red);
     }
 
     private async reconnecting(): Promise<void> {
-        this.log(`Connection lost, attempting to reconnect.`, Color.red);
+        this.log('Reconnect', `Connection lost, attempting to reconnect.`, Color.red);
     }
     
     private async resume(replayed: Number): Promise<void> {
-        return this.log(`Websocket resumed, replayed ${replayed} events.`, Color.green)
+        return this.log('Client resumed connection', `Websocket resumed, replayed ${replayed} events.`, Color.green)
     }
 
     private async handleMessage(message: Message): Promise<Cmd> {
@@ -85,88 +80,80 @@ export class Bot {
     }
 
     private async memberJoin(member: GuildMember): Promise<void> {
-        return this.log(`${member.user.username} has joined ${member.guild.name}`, Color.green);
+        return this.log('Member Join', `${member.user.username} has joined ${member.guild.name}`, Color.green);
     }
 
     private async memberLeave(member: GuildMember): Promise<void> {
-        return this.log(`${member.user.username} has left ${member.guild.name}`, Color.red);
+        return this.log('Member Leave', `${member.user.username} has left ${member.guild.name}`, Color.red);
     }
 
     private async reactionAdd(reaction: MessageReaction, user: User): Promise<void> {
         const member = `${user.username}#${user.discriminator}`;
         const message = reaction.message.id;
         const emoji = reaction.emoji.name;
-        return this.log(`${member} reacted to ${message} with :${emoji}:`, Color.blue);
+        return console.log(`${member} reacted to ${message} with :${emoji}:`);
     }
 
     private async reactionRemove(reaction: MessageReaction, user: User): Promise<void> {
         const member = `${user.username}#${user.discriminator}`;
         const message = reaction.message.id;
         const emoji = reaction.emoji;
-        return this.log(`${member} removed "${emoji}" reaction to ${message}`, Color.blue);
-    }
-
-    private async createGuild(guild: Guild): Promise<void> {
-        const createdAt = moment().format("dddd, MMMM Do YYYY");
-        return this.log(`${guild.name} : ${guild.id} created at ${createdAt}`, Color.green);
-    }
-
-    private async deleteGuild(guild: Guild): Promise<void> {
-        const deletedAt = moment().format("dddd, MMMM Do YYYY");
-        return this.log(`${guild.name} : ${guild.id} deleted at ${deletedAt}`, Color.red);
+        return console.log(`${member} removed "${emoji}" reaction to ${message}`);
     }
 
     private async addBan(guild: Guild, user: User): Promise<void> {
         const server = guild.id;
         const member = user.username;
-        return this.log(`${member} has been banned from ${server}`, Color.blue);
+        return this.log('Member Banned', `${member} has been banned from ${server}`, Color.blue);
     }
 
     private async removeBan(guild: Guild, user: User): Promise<void> {
         const server = guild.id;
         const member = user.username;
-        return this.log(`${member} has been unbanned from ${server}`, Color.blue);
-    }
-
-    private async createChannel(channel: Channel): Promise<void> {
-        const newChannelName = this.client.guilds.get(data.defaultServer).channels.get(channel.id);
-        return this.log(`New ${channel.type} channel ${newChannelName} created: ${channel.id}`, Color.green);
-    }
-
-    private async removeChannel(channel: Channel): Promise<void> {
-        return this.log(`${channel.type} channel Deleted: ${channel.id}`, Color.red);
-    }
-
-    private async updateChannel(oldChannel: Channel, newChannel: Channel): Promise<void> {
-        return this.log(`Changes have been made to ${oldChannel.type} channel: ${oldChannel.id}`, Color.yellow);
+        return this.log('Member Unbanned', `${member} has been unbanned from ${server}`, Color.blue);
     }
 
     private async emojiCreate(emoji: Emoji): Promise<void> {
         const author = await emoji.fetchAuthor();
-        return this.log(`${author.username} added new emoji: :${emoji.name}:`, Color.green);
+        return this.log('Emoji Created', `${author.username} added new emoji: :${emoji.name}:`, Color.green);
     }
 
     private async emojiDelete(emoji: Emoji): Promise<void> {
-        return this.log(`emoji removed: ${emoji.url}`, Color.red);
+        return this.log('Emoji Removed', `${emoji.url}`, Color.red);
     }
 
     private async emojiUpdate(oldEmoji: Emoji, newEmoji: Emoji): Promise<void> {
         return console.log(`${oldEmoji.url} updated to: ${newEmoji.url}`);
     }
 
-    private async log(message: String, color: Color): Promise<void> {
+    public async log(title: string, message: String, color: Color): Promise<void> {
         if(data.defaultServer && data.modlog) {
             try {
                 const logOutput = new RichEmbed()
                 .setColor(color)
-                .addField('Log Type', `${message}`, true);
+                .addField(title, `${message}`, true);
                 (this.client.guilds.get(data.defaultServer).channels.get(data.modlog) as TextChannel).send(logOutput);
             } catch (error) {
                 console.log(error);
             }
-            
         } else {
-            return console.log(`Log Event: ${message}`);
+            return console.log(`Logger: ${message}`);
         }
     }
 }
+
+/* export const log = async (title: string, message: String, color: Color): Promise<void> => {
+    if(data.defaultServer && data.modlog) {
+        try {
+            const logOutput = new RichEmbed()
+            .setColor(color)
+            .addField(title, `${message}`, true);
+            (this.client.guilds.get(data.defaultServer).channels.get(data.modlog) as TextChannel).send(logOutput);
+        } catch (error) {
+            console.log(error);
+        }
+        
+    } else {
+        return console.log(`Log Event: ${message}`);
+    }
+} */

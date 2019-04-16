@@ -15,7 +15,7 @@ export class Cmd {
         switch (this.cmd) {
             case 'ping': this.context.channel.send('pong!'); break
             case 'profile': new ProfileInfo(context); break
-            case 'guild': new GuildInfo(context); break
+            case 'ginfo': new GuildInfo(context); break
             case 'purge': new Purge(context); break
             case 'spam': new Spam(context); break
             default: break

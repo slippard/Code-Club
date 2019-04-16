@@ -4,7 +4,8 @@ interface IData {
     prefix: string,
     dburl: string,
     modlog: string,
-    defaultServer?: string
+    defaultServer: string,
+    adminRoleName: string
 }
 
 /**
@@ -22,5 +23,6 @@ export const data: IData = {
     prefix: 'cc!',
     dburl: 'Database Url',
     ownerid: 'Owner Id',
-    token: 'Bot Token'
+    token: 'Bot Token',
+    adminRoleName: 'Role Name'
 }
